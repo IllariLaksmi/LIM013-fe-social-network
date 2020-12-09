@@ -13,6 +13,16 @@ export const createUserDB = (email, name, userUid, photo) => {
     .catch((error) => console.log('Hubo un error', error));
 };
 
+export const savePost = (textValue, photoValue, statusValue, date, id) => {
+  firestore().collection('posts').doc(id).set({
+    text: textValue,
+    photo: photoValue,
+    uid: id,
+    date,
+    status: statusValue,
+  });
+};
+
 export const savePosts = (textValue, photoValue, statusValue) => {
   const user = firebase.auth().currentUser;
   const date = new Date();
@@ -20,14 +30,5 @@ export const savePosts = (textValue, photoValue, statusValue) => {
     console.log('No hay user');
     return;
   }
-  const data = {
-    text: textValue,
-    photo: photoValue,
-    uid: user.uid,
-    date,
-    status: statusValue,
-  };
-  firestore().collection('posts').add(data)
-    .then((response) => console.log(response))
-    .catch((error) => console.log(error));
+  savePost(textValue, photoValue, statusValue, date, user.uid);
 };

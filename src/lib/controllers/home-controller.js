@@ -1,4 +1,4 @@
-import { savePosts } from '../firebase/firestore.js';
+import { savePost } from '../firebase/firestore.js';
 
 const firestore = () => firebase.firestore();
 const db = firestore;
@@ -6,7 +6,7 @@ const db = firestore;
 
 export const post = (text, status, photo) => {
   // const photo = 'photo';
-  savePosts(text, photo, status);
+  savePost(text, photo, status);
 };
 
 export const createPost = (showPosts, containerPost) => db().collection('posts').where('status', '==', 'publico').onSnapshot((snapshot) => {
@@ -50,16 +50,6 @@ export const myownPosts = (showPosts, containerPost, user) => db().collection('p
     }
   });
 });
-
-export const getMyPosts = (showPosts) => db().collection('posts').where('status', '==', 'privado')
-  .get()
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data());
-      showPosts(doc);
-    });
-  });
 
 export const deletePosts = (idPost) => {
   db().collection('posts').doc(idPost).delete();
